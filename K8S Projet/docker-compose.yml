@@ -1,0 +1,54 @@
+version: '3.8'
+services:
+  auth-api:
+    build: ./auth-api
+    ports:
+      - "8081:8081"
+    networks:
+      - app-network
+
+  frontend:
+    build: ./frontend
+    ports:
+      - "8080:8080"
+    depends_on:
+      - auth-api
+      - todos-api
+    networks:
+      - app-network
+
+  log-message-processor:
+    build: ./log-message-processor
+    environment:
+      - REDIS_HOST=redis  
+      - REDIS_PORT=6379
+      - REDIS_CHANNEL=log_channel
+    depends_on:
+      - redis  
+    networks:
+      - app-network
+
+  todos-api:
+    build: ./todos-api
+    ports:
+      - "8082:8082"
+    networks:
+      - app-network
+
+  users-api:
+    build: ./users-api
+    ports:
+      - "8083:8083"
+    networks:
+      - app-network
+
+  redis:
+    image: redis:latest
+    ports:
+      - "6379:6379"
+    networks:
+      - app-network
+
+networks:
+  app-network:
+    driver: bridge

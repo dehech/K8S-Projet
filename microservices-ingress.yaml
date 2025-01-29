@@ -1,0 +1,49 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: microservices-ingress
+  namespace: microservices  # Assurez-vous que le namespace correspond
+  annotations:
+    nginx.ingress.kubernetes.io/rewrite-target: /
+spec:
+  rules:
+  - host: frontend.project.com  # Nom de domaine ou adresse IP publique
+    http:
+      paths:
+      - path: /frontend
+        pathType: Prefix
+        backend:
+          service:
+            name: frontend-service
+            port:
+              number: 8080
+  - host: auth-api.project.com  # Nom de domaine ou adresse IP publique
+    http:
+      paths:
+      - path: /auth
+        pathType: Prefix
+        backend:
+          service:
+            name: auth-api-service
+            port:
+              number: 8081
+  - host: todos-api.project.com  # Nom de domaine ou adresse IP publique
+    http:
+      paths:
+      - path: /todos
+        pathType: Prefix
+        backend:
+          service:
+            name: todos-api-service
+            port:
+              number: 8082
+  - host: users-api.project.com  # Nom de domaine ou adresse IP publique
+    http:
+      paths:
+      - path: /users
+        pathType: Prefix
+        backend:
+          service:
+            name: users-api-service
+            port:
+              number: 8083
